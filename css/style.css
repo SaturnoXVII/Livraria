@@ -1,0 +1,1109 @@
+/*
+  =============================================================================
+  Livraria Arcana - CSS (Estética editorial, flat, elegante)
+  =============================================================================
+  Direção visual:
+  - Fundo: #0D0D0D (noir editorial)
+  - Acento: dourado sutil (sem “brilhar demais”)
+  - Tipografia: Playfair Display (títulos) + Inter (texto)
+
+  Como este CSS está organizado:
+  1) Design Tokens (variáveis em :root): cores, raio, sombras
+  2) Base/Reset: box-sizing, body, tipografia, links
+  3) Layout por seções: utilitários de seção + componentes (navbar, hero, etc.)
+  4) Componentes: botões, inputs, cards, Swiper, modal
+  5) Responsivo: ajustes por breakpoint
+*/
+
+/* =============================================================================
+   1) VARIÁVEIS GLOBAIS (DESIGN TOKENS)
+   ============================================================================= */
+:root{
+  /*
+    Por que usar variáveis?
+    - Consistência: a mesma cor/raio aparece igual em todo lugar
+    - Manutenção: mudar a “cara” do site vira trocar 1 linha
+    - Escalabilidade: fácil criar tema claro no futuro (sobrescrevendo variáveis)
+
+    Convenção de nomes:
+    --bg / --bg-2: fundos principais
+    --card / --card-2: superfícies (cards) translúcidas
+    --border: bordas discretas (quase invisíveis)
+    --text / --muted: texto principal e secundário
+    --gold / --gold-2: acento editorial (dourado e seu “halo”)
+    --r-lg / --r-md: raios de borda
+    --shadow: sombra padrão para blocos importantes
+  */
+  --bg: #0D0D0D;
+  --bg-2: #111111;
+  --card: rgba(255,255,255,.06);
+  --card-2: rgba(255,255,255,.08);
+  --border: rgba(255,255,255,.10);
+  --text: rgba(255,255,255,.90);
+  --muted: rgba(255,255,255,.66);
+
+  /* Acento “dourado” (editorial, sem neon) */
+  --gold: #C9A35E;
+  --gold-2: rgba(201,163,94,.22);
+
+  /* Raio e sombra: “flat sofisticado” (sem plástico) */
+  --r-lg: 18px;
+  --r-md: 14px;
+  --shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+
+/* =============================================================================
+   2) RESET / BASE
+   ============================================================================= */
+
+/*
+  box-sizing global
+  -----------------
+  Faz com que padding e border contem dentro do width/height.
+  Resultado: layouts previsíveis, menos “por que que estourou?”.
+*/
+*{ box-sizing: border-box; }
+
+/*
+  Scroll suave
+  ------------
+  Quando você clica em links âncora (#catalogo, #contato etc.),
+  o navegador desliza em vez de “teleportar”.
+*/
+html{ scroll-behavior: smooth; }
+
+/*
+  Body base
+  ---------
+  - remove margem padrão
+  - define fundo e cor padrão do site
+  - define a fonte do corpo (Inter) com fallback seguro
+*/
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/*
+  Compensação do header fixo
+  --------------------------
+  Como a navbar está fixed-top, o conteúdo poderia ficar escondido atrás dela.
+  Esse padding cria “espaço de respiro” no topo do main.
+*/
+.arcana-main{ padding-top: 78px; }
+
+/*
+  Títulos
+  -------
+  Playfair dá o clima editorial.
+  letter-spacing sutil: refino sem ficar “espalhado”.
+*/
+h1,h2,h3,h4,h5{
+  font-family: "Playfair Display", serif;
+  letter-spacing: .2px;
+}
+
+/*
+  Links
+  -----
+  - herdam cor do contexto (para não “gritar”)
+  - sem sublinhado (você pode criar sublinhado custom em componentes específicos)
+*/
+a{ color: inherit; text-decoration: none; }
+a:hover{ color: inherit; }
+
+/* =============================================================================
+   3) UTILITÁRIOS DE SEÇÃO (estrutura geral)
+   ============================================================================= */
+
+/* Espaçamento vertical padrão (ritmo de leitura entre seções) */
+.section{
+  padding: 84px 0;
+}
+
+/*
+  Seção “muted”
+  -------------
+  Alterna o fundo para dar “capítulos” visuais.
+  - radial-gradient: brilho dourado discreto (atmosfera)
+  - linear-gradient: leve variação de contraste
+  - bordas: separam seção sem precisar de linhas pesadas
+*/
+.section-muted{
+  background: radial-gradient(1200px 400px at 20% 0%, rgba(201,163,94,.08), transparent 70%),
+              linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%);
+  border-top: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+/*
+  Cabeçalho padrão de seção
+  -------------------------
+  Serve para: título/subtítulo + ação (ex.: busca) na mesma linha.
+  - flex-wrap evita quebra feia no mobile
+*/
+.section-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+/* Tipografia padrão de títulos/subtítulos por seção */
+.section-title{
+  font-size: clamp(28px, 3vw, 40px);
+  margin: 0;
+}
+.section-subtitle{
+  margin: 10px 0 0;
+  color: var(--muted);
+  max-width: 58ch; /* limita largura e melhora leitura */
+}
+.section-paragraph{
+  color: rgba(255,255,255,.78);
+  line-height: 1.7;
+}
+
+/* =============================================================================
+   4) EYEBROW (microtexto editorial)
+   ============================================================================= */
+
+/*
+  Eyebrow
+  -------
+  Aquele microtexto acima de títulos (revista/edição).
+  - uppercase + tracking (letter-spacing) = “cara editorial”
+  - ::before desenha um traço dourado discreto
+*/
+.eyebrow{
+  display:inline-flex;
+  gap: 10px;
+  align-items:center;
+  color: rgba(255,255,255,.72);
+  font-size: 13px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.eyebrow::before{
+  content:"";
+  width: 18px;
+  height: 1px;
+  background: rgba(201,163,94,.65);
+  display:inline-block;
+}
+
+/* =============================================================================
+   5) NAVBAR (topo fixo + efeito glass ao rolar)
+   ============================================================================= */
+
+/*
+  Comportamento:
+  - Estado inicial: transparente (hero “respira” por trás)
+  - Ao rolar: JS adiciona .is-scrolled no header -> vidro fosco + blur
+*/
+.arcana-header{
+  transition: background .25s ease, border-color .25s ease;
+}
+
+/* Navbar base */
+.arcana-nav{
+  padding: 14px 0;
+  background: transparent;
+}
+
+/*
+  Header “rolado”
+  ---------------
+  backdrop-filter: blur(...) cria o vidro fosco.
+  OBS: em alguns browsers antigos, o blur pode ser ignorado (fica só o alpha).
+*/
+.arcana-header.is-scrolled{
+  background: rgba(13,13,13,.72);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+/* Marca/Logo */
+.brand-mark{
+  color: var(--gold);
+  font-size: 18px;
+}
+.brand-name{
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  letter-spacing: .4px;
+  color: rgba(255,255,255,.92);
+}
+
+/*
+  Links de navegação
+  ------------------
+  padding com !important: garante que seu espaçamento prevaleça sobre o Bootstrap.
+*/
+.nav-link{
+  color: rgba(255,255,255,.78);
+  font-size: 14px;
+  padding: 10px 10px !important;
+  border-radius: 12px;
+  transition: background .2s ease, color .2s ease;
+}
+.nav-link:hover{
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+}
+
+/* Botão hamburguer (mobile) */
+.arcana-toggler{
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 6px 10px;
+}
+
+/*
+  Ícone do toggler do Bootstrap
+  -----------------------------
+  Inverte para ficar visível em fundo escuro.
+  Se em algum tema claro você notar “ícone sumindo”, é esse filtro que você ajusta.
+*/
+.navbar-toggler-icon{
+  filter: invert(1);
+}
+
+/* =============================================================================
+   6) BOTÕES (Arcana e Ghost)
+   ============================================================================= */
+
+/*
+  Botão principal (CTA): btn-arcana
+  -------------------------------
+  - Gradiente: sensação “metal” (dourado editorial)
+  - box-shadow leve: dá destaque sem virar neon
+  - hover: sobe 1px (tátil) + ligeiro brilho
+*/
+.btn-arcana{
+  background: linear-gradient(180deg, rgba(201,163,94,.95), rgba(201,163,94,.78));
+  border: 1px solid rgba(201,163,94,.35);
+  color: #121212;
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(201,163,94,.12);
+  transition: transform .18s ease, filter .18s ease;
+}
+.btn-arcana:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  color: #0d0d0d;
+}
+
+/*
+  Botão secundário: btn-ghost
+  --------------------------
+  Translúcido, discreto, ideal para ação “B” (ex.: conhecer história).
+*/
+.btn-ghost{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.88);
+  border-radius: 14px;
+  transition: transform .18s ease, background .18s ease;
+}
+.btn-ghost:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.92);
+}
+
+/* =============================================================================
+   7) INPUTS (busca e formulários)
+   ============================================================================= */
+
+/*
+  arcana-input
+  ------------
+  “Skin” Arcana em cima de inputs do Bootstrap (.form-control).
+  - fundo escuro translúcido
+  - borda sutil
+  - foco com halo dourado (feedback claro de interação)
+*/
+.arcana-input{
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  color: rgba(255,255,255,.90);
+  padding: 12px 14px;
+}
+.arcana-input::placeholder{ color: rgba(255,255,255,.45); }
+.arcana-input:focus{
+  background: rgba(255,255,255,.05);
+  border-color: rgba(201,163,94,.45);
+  box-shadow: 0 0 0 .2rem rgba(201,163,94,.12);
+  color: rgba(255,255,255,.92);
+}
+
+/* =============================================================================
+   8) HERO (vitrine editorial)
+   ============================================================================= */
+
+/*
+  Hero
+  ----
+  Primeiro “impacto” do site.
+  - position: relative permite inserir efeitos absolutos (glow)
+  - overflow: hidden evita que os brilhos vazem para fora
+  - background em gradientes: atmosfera sem imagem pesada
+*/
+.hero{
+  position: relative;
+  padding: 84px 0 60px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(201,163,94,.12), transparent 60%),
+    radial-gradient(900px 400px at 80% 0%, rgba(255,255,255,.06), transparent 55%);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+/* Título principal do hero (grande, responsivo via clamp) */
+.hero-title{
+  font-size: clamp(38px, 4.2vw, 58px);
+  line-height: 1.02;
+  margin: 14px 0 0;
+}
+
+/* Destaque dourado no título (acento principal) */
+.hero-accent{
+  color: rgba(201,163,94,.98);
+  text-shadow: 0 10px 30px rgba(201,163,94,.10);
+}
+
+/* Texto de apoio do hero */
+.hero-subtitle{
+  margin-top: 16px;
+  color: rgba(255,255,255,.74);
+  max-width: 62ch;
+  line-height: 1.65;
+}
+
+/* Métricas (microcards no hero) */
+.hero-metrics{
+  display:flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.metric{
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  min-width: 150px;
+}
+.metric-value{
+  font-weight: 700;
+  color: rgba(255,255,255,.92);
+}
+.metric-label{
+  display:block;
+  font-size: 13px;
+  color: rgba(255,255,255,.62);
+}
+
+/*
+  Card do hero
+  ------------
+  Um “bloco editorial” com superfície translúcida e sombra profunda.
+*/
+.hero-card{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.hero-card-top{
+  display:flex;
+  justify-content:space-between;
+  padding: 14px 14px 0;
+}
+
+/* Pills (etiquetas) */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  font-size: 12px;
+  color: rgba(255,255,255,.78);
+}
+.pill-soft{
+  border-color: rgba(201,163,94,.22);
+  background: rgba(201,163,94,.12);
+  color: rgba(255,255,255,.86);
+}
+
+/*
+  hero-cover
+  ----------
+  Área visual com “capa” (imagem + camadas de gradiente).
+  - url(...) aponta para arquivo local (verifique caminho no deploy)
+  - background-size: cover faz preencher a área
+*/
+.hero-cover{
+  margin: 12px;
+  border-radius: 16px;
+  height: 280px;
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(800px 300px at 20% 30%, rgba(201,163,94,.22), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+    url("/img/capas_de_livros_na_livraria.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-card-bottom{ padding: 12px 16px 18px; }
+.hero-card-title{ font-size: 22px; margin: 6px 0 6px; }
+.hero-card-text{
+  margin: 0 0 14px;
+  color: rgba(255,255,255,.72);
+  line-height: 1.6;
+}
+
+/*
+  Glow decorativo
+  ---------------
+  Uma “aura” dourada fora do fluxo (não clica, não seleciona).
+*/
+.hero-glow{
+  position:absolute;
+  inset:auto -30% -55% -30%;
+  height: 360px;
+  background: radial-gradient(closest-side, rgba(201,163,94,.14), transparent 70%);
+  filter: blur(14px);
+  pointer-events:none;
+}
+
+/* =============================================================================
+   9) FILTROS (Catálogo)
+   ============================================================================= */
+
+.filters{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/*
+  Botões de filtro (chips)
+  ------------------------
+  - hover com “lift”
+  - is-active marca filtro selecionado (estado)
+*/
+.filter-btn{
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.78);
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+.filter-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.06);
+}
+.filter-btn.is-active{
+  border-color: rgba(201,163,94,.42);
+  background: rgba(201,163,94,.14);
+  color: rgba(255,255,255,.90);
+}
+
+/* =============================================================================
+   10) CATÁLOGO (cards dos livros)
+   ============================================================================= */
+
+/*
+  Card do catálogo
+  ----------------
+  Superfície clicável, com hover “sobe” e muda borda.
+*/
+.catalog-card{
+  height: 100%;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  overflow: hidden;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.catalog-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(201,163,94,.22);
+  background: rgba(255,255,255,.05);
+}
+
+/*
+  Capa do card
+  ------------
+  Normalmente o JS define background-image com a capa do livro.
+  Aqui fica um fallback “bonito” com gradientes, caso não tenha imagem.
+*/
+.catalog-cover{
+  height: 220px;
+  background:
+    radial-gradient(700px 280px at 25% 30%, rgba(201,163,94,.22), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  background-size: cover;
+  background-position: center;
+}
+
+.catalog-body{ padding: 14px 14px 16px; }
+.catalog-title{ margin: 0; font-size: 20px; }
+.catalog-author{
+  margin: 6px 0 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,.66);
+}
+
+/*
+  Sinopse curta com line-clamp
+  ----------------------------
+  Técnica:
+  - display: -webkit-box + -webkit-line-clamp limita linhas
+  - overflow: hidden corta o resto
+  OBS: line-clamp “puro” ainda não é suportado igual em todos os browsers.
+*/
+.catalog-desc{
+  margin: 0 0 12px;
+  color: rgba(255,255,255,.70);
+  font-size: 14px;
+  line-height: 1.55;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.catalog-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.price{
+  font-weight: 600;
+  color: rgba(201,163,94,.92);
+}
+
+/* Tags (chips) nos cards */
+.tags{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.74);
+}
+
+/* Estado vazio do catálogo */
+.empty-state{
+  margin-top: 18px;
+  border: 1px dashed rgba(255,255,255,.14);
+  border-radius: var(--r-md);
+  padding: 16px;
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.72);
+}
+
+/* =============================================================================
+   11) VANTAGENS (feature cards)
+   ============================================================================= */
+
+.feature-card{
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  padding: 16px;
+  height: 100%;
+}
+
+/* “ícone” em bloco, com fundo dourado suave */
+.feature-icon{
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(201,163,94,.14);
+  border: 1px solid rgba(201,163,94,.22);
+  color: rgba(255,255,255,.88);
+  margin-bottom: 10px;
+}
+.feature-title{ margin: 0 0 6px; font-size: 20px; }
+.feature-text{
+  margin: 0;
+  color: rgba(255,255,255,.70);
+  line-height: 1.6;
+}
+
+/* =============================================================================
+   12) DIGITAL (lista + card)
+   ============================================================================= */
+
+/* Lista limpa (sem bullets padrão) */
+.arcana-list{
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+}
+.arcana-list li{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 8px 0;
+  color: rgba(255,255,255,.72);
+}
+
+/* Dot dourado com halo */
+.dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(201,163,94,.85);
+  box-shadow: 0 0 0 4px rgba(201,163,94,.12);
+}
+
+/* Card da área digital */
+.digital-card{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(900px 380px at 30% 20%, rgba(201,163,94,.16), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.digital-card-inner{ padding: 20px; }
+.digital-title{ margin: 0 0 10px; font-size: 26px; }
+.digital-text{
+  margin: 0 0 14px;
+  color: rgba(255,255,255,.72);
+  line-height: 1.65;
+}
+.digital-badges{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Badge Arcana (variante do Bootstrap) */
+.badge-arcana{
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(255,255,255,.76);
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+/* =============================================================================
+   13) ENTREGAS (ship cards)
+   ============================================================================= */
+
+.ship-card{
+  height: 100%;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  padding: 16px;
+}
+.ship-title{ margin: 0 0 8px; font-size: 22px; }
+.ship-text{
+  margin: 0 0 10px;
+  color: rgba(255,255,255,.70);
+  line-height: 1.65;
+}
+.ship-note{
+  color: rgba(255,255,255,.58);
+  font-size: 12px;
+}
+
+/* =============================================================================
+   14) SWIPER (História)
+   ============================================================================= */
+
+/*
+  Container Swiper (história)
+  ---------------------------
+  Borda, fundo translúcido e padding criam “moldura” do carrossel.
+*/
+.arcana-swiper{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  padding: 14px;
+}
+
+/* Card dentro de cada slide */
+.story-card{
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  padding: 18px;
+  height: 240px;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.story-kicker{
+  margin: 0 0 6px;
+  color: rgba(255,255,255,.62);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.story-title{ margin: 0 0 10px; font-size: 26px; }
+.story-text{
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  line-height: 1.65;
+}
+
+/* Controles Swiper (prev/next/pagination) */
+.swiper-controls{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 4px 0;
+}
+
+/*
+  Botões do Swiper no “fluxo”
+  ---------------------------
+  Por padrão o Swiper posiciona em cima do slider.
+  Aqui você traz pro layout normal (position: static) pra alinhar com paginação.
+*/
+.swiper-button-prev,
+.swiper-button-next{
+  position: static !important;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  margin: 0 !important;
+}
+
+/* Ícones (Swiper desenha via ::after) */
+.swiper-button-prev::after,
+.swiper-button-next::after{
+  font-size: 16px !important;
+  color: rgba(255,255,255,.82);
+}
+
+/* Paginação central */
+.swiper-pagination{
+  position: static !important;
+  flex: 1;
+  display:flex;
+  justify-content:center;
+}
+
+/* Bullets */
+.swiper-pagination-bullet{
+  background: rgba(255,255,255,.24) !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active{
+  background: rgba(201,163,94,.92) !important;
+}
+
+/* =============================================================================
+   15) CONTATO (cards e formulário)
+   ============================================================================= */
+
+.contact-card{
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  padding: 16px;
+  color: rgba(255,255,255,.76);
+}
+.arcana-form{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  padding: 18px;
+}
+
+/* =============================================================================
+   16) NEWSLETTER (bloco destacado)
+   ============================================================================= */
+
+/*
+  Newsletter
+  ----------
+  Bloco “chamativo sem gritar”:
+  - fundo com glow dourado discreto
+  - flex para alinhar texto e form
+  - quebra bem no mobile por causa do flex-wrap
+*/
+.newsletter{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(900px 380px at 15% 30%, rgba(201,163,94,.18), transparent 55%),
+    rgba(255,255,255,.03);
+  padding: 18px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.newsletter-title{ margin: 0 0 6px; font-size: 34px; }
+.newsletter-text{
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  max-width: 60ch;
+  line-height: 1.65;
+}
+
+/* Form em linha (com quebra) */
+.newsletter-form{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Input com largura mínima responsiva (não fica micro) */
+.newsletter-form .arcana-input{
+  min-width: min(360px, 78vw);
+}
+
+/* =============================================================================
+   17) FOOTER
+   ============================================================================= */
+
+.arcana-footer{
+  padding: 26px 0 42px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+}
+.footer-brand{
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+}
+.footer-note{ color: rgba(255,255,255,.62); }
+.footer-link{
+  color: rgba(255,255,255,.70);
+  transition: color .18s ease;
+}
+.footer-link:hover{ color: rgba(255,255,255,.92); }
+.footer-sep{
+  color: rgba(255,255,255,.30);
+  margin: 0 10px;
+}
+
+/* =============================================================================
+   18) MODAL (Bootstrap customizado)
+   ============================================================================= */
+
+/*
+  arcana-modal
+  ------------
+  Troca a “skin” do modal do Bootstrap para o tema Arcana.
+  - fundo escuro com transparência
+  - blur (vidro) por trás
+*/
+.arcana-modal{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(13,13,13,.92);
+  backdrop-filter: blur(14px);
+  color: rgba(255,255,255,.90);
+}
+.modal-title-arcana{
+  font-family: "Playfair Display", serif;
+}
+
+/* Capa do livro dentro do modal (JS pode aplicar background-image aqui) */
+.modal-cover{
+  width: 100%;
+  height: 320px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(700px 280px at 25% 30%, rgba(201,163,94,.22), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  background-size: cover;
+  background-position: center;
+}
+
+.modal-meta{ color: rgba(255,255,255,.68); }
+.modal-price{
+  font-weight: 700;
+  color: rgba(201,163,94,.95);
+  font-size: 18px;
+}
+.modal-section-title{
+  color: rgba(255,255,255,.86);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.modal-text{
+  color: rgba(255,255,255,.74);
+  line-height: 1.7;
+}
+.modal-tags{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.modal-footnote{ color: rgba(255,255,255,.55); }
+
+/* =============================================================================
+   19) RESPONSIVO (ajustes por breakpoint)
+   ============================================================================= */
+
+/*
+  Até 991px (abaixo de lg)
+  ------------------------
+  Ajusta alturas e paddings pra tablets/celulares grandes:
+  - hero menos alto
+  - capas menores
+  - cards de story um pouco mais baixos
+*/
+@media (max-width: 991px){
+  .arcana-main{ padding-top: 76px; }
+  .hero{ padding-top: 68px; }
+  .hero-cover{ height: 240px; }
+  .story-card{ height: 220px; }
+}
+
+/*
+  Link ativo na navbar
+  --------------------
+  Você pode marcar o link da seção atual com .is-active via JS.
+  Visual: chip dourado discreto, alinhado com tema.
+*/
+.nav-link.is-active {
+  background: rgba(201,163,94,.14);
+  border: 1px solid rgba(201,163,94,.22);
+  color: rgba(255,255,255,.92);
+}
+
+/*
+  Scroll offset para header fixo
+  ------------------------------
+  Quando você clica em #contato, a seção “encosta” no topo.
+  scroll-margin-top faz parar um pouco abaixo, evitando ficar escondida pela navbar.
+*/
+section[id]{
+  scroll-margin-top: 92px;
+}
+
+/*
+  Até 576px (mobile pequeno)
+  --------------------------
+  Newsletter vira “pilha”:
+  - input e botão ocupam 100% (mais confortável de clicar)
+*/
+@media (max-width: 576px){
+  .newsletter-form{ width: 100%; }
+  .newsletter-form .arcana-input{ width: 100%; }
+  .newsletter-form .btn{ width: 100%; }
+}
+
+/* =============================================================================
+   20) CATÁLOGO EM CARROSSEL (Swiper)
+   ============================================================================= */
+
+/*
+  Swiper do catálogo
+  ------------------
+  Separado do Swiper da história para:
+  - ter controles custom (setinhas e paginação próprias)
+  - manter estética consistente com os cards do catálogo
+*/
+.arcana-catalog-swiper{
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  padding: 14px;
+}
+
+/* Slides com altura automática (evita “cortar” conteúdo do card) */
+.arcana-catalog-swiper .swiper-slide{
+  height: auto;
+}
+
+/* Garantia: o card preenche o slide */
+.arcana-catalog-swiper .catalog-card{
+  height: 100%;
+}
+
+/*
+  Controles do catálogo
+  ---------------------
+  Layout: prev | paginação | next
+*/
+.catalog-controls{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 4px 0;
+}
+
+/* Botões prev/next customizados */
+.catalog-prev,
+.catalog-next{
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor: pointer;
+  user-select: none; /* evita selecionar o símbolo ao clicar */
+}
+
+/* Setas simples via pseudo-elemento (leve e sem asset extra) */
+.catalog-prev::before{ content:"‹"; font-size: 22px; color: rgba(255,255,255,.82); line-height: 1; }
+.catalog-next::before{ content:"›"; font-size: 22px; color: rgba(255,255,255,.82); line-height: 1; }
+
+/* Paginação central */
+.catalog-pagination{
+  flex: 1;
+  display:flex;
+  justify-content:center;
+}
+
+/* Bullets do Swiper do catálogo */
+.arcana-catalog-swiper .swiper-pagination-bullet{
+  background: rgba(255,255,255,.24) !important;
+  opacity: 1 !important;
+}
+.arcana-catalog-swiper .swiper-pagination-bullet-active{
+  background: rgba(201,163,94,.92) !important;
+}
+

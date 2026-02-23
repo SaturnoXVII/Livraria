@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<!--
+  =========================================
+  DOCUMENTO HTML (HTML5)
+  =========================================
+  - O DOCTYPE avisa ao navegador que este arquivo segue o padrão HTML5.
+  - Isso evita o “modo quirks” (modo antigo) e garante renderização consistente.
+-->
+<html lang="pt-br">
+<!--
+  <html> é o elemento raiz (o “envelope” do documento).
+  lang="pt-br" define o idioma principal como Português do Brasil, ajudando em:
+  - Acessibilidade (leitores de tela pronunciam melhor)
+  - SEO (motores de busca entendem o idioma)
+  - Ferramentas de tradução/correção
+-->
+
+<head>
+  <!--
+    =========================================
+    HEAD (cabeçalho do documento)
+    =========================================
+    Aqui ficam informações que NÃO aparecem como conteúdo direto na página.
+    Exemplos: metadados, título da aba, favicon, links de CSS, fontes, etc.
+  -->
+
+  <!--
+    Comentários de “documentação de projeto”
+    ----------------------------------------
+    Isso não altera o site, mas serve como “manual rápido” do que você usou e por quê.
+    Excelente para você no futuro (e para qualquer pessoa que pegar o projeto).
+  -->
+  <!--
+    Livraria Arcana
+    - Stack: HTML + CSS + JS
+    - Libs: Bootstrap 5 (layout/componentes), AOS (animações on-scroll), Swiper (carrosséis)
+    - Estética: Editorial/flat | Fundo #0D0D0D | Tipos: Playfair Display (títulos) + Inter (texto)
+  -->
+
+  <!--
+    Meta charset
+    ------------
+    Define o conjunto de caracteres para UTF-8.
+    Isso garante acentos e símbolos (ç, ã, ✦ etc.) exibidos corretamente.
+  -->
+  <meta charset="UTF-8" />
+
+  <!--
+    Meta viewport
+    -------------
+    Controla como o layout se adapta em celulares/tablets.
+    - width=device-width: usa a largura real do dispositivo
+    - initial-scale=1.0: escala inicial sem “zoom out”
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    <title>
+    -------
+    Texto exibido na aba do navegador e usado como título em favoritos/compartilhamentos.
+    Também influencia SEO.
+  -->
+  <title>Livraria Arcana</title>
+
+  <!--
+    Favicon
+    -------
+    Ícone pequeno exibido na aba do navegador.
+    Dica: garanta que o caminho exista em produção (deploy), senão pode quebrar.
+  -->
+  <link rel="icon" href="/img/ArcanaIcone3.png" />
+
+  <!--
+    =========================================
+    FONTES (Google Fonts)
+    =========================================
+    preconnect: “antecipa a conexão” com os servidores do Google Fonts.
+    Isso reduz latência e acelera o carregamento das fontes.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!--
+    Importação de fontes:
+    - Inter: corpo de texto (pesos 300 a 600)
+    - Playfair Display: títulos (pesos 500 a 700)
+    display=swap:
+    - Evita “texto invisível” durante o carregamento.
+    - Mostra uma fonte fallback rapidamente e troca quando a fonte final chega.
+  -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!--
+    =========================================
+    BOOTSTRAP 5 (CSS)
+    =========================================
+    Framework para:
+    - Grid responsivo (row/col-*)
+    - Componentes prontos (navbar, modal, botões, forms)
+    - Utilitários (spacing, flex, alinhamento etc.)
+  -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!--
+    =========================================
+    AOS (Animate On Scroll) - CSS
+    =========================================
+    Biblioteca que anima elementos quando entram no viewport.
+    Você usa via atributos no HTML:
+    - data-aos="fade-up"
+    - data-aos-delay="120"
+    etc.
+    OBS: precisa do JS + AOS.init() para funcionar.
+  -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!--
+    =========================================
+    SWIPER (CSS)
+    =========================================
+    Biblioteca de carrossel “touch friendly” (arrastar no mobile).
+    Estrutura:
+    - .swiper (container)
+    - .swiper-wrapper (trilho)
+    - .swiper-slide (cada item)
+    OBS: precisa do JS e da inicialização new Swiper(...).
+  -->
+  <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+
+  <!--
+    =========================================
+    CSS DO PROJETO (estilos autorais)
+    =========================================
+    Aqui entra a identidade visual da Arcana:
+    cores, tipografia, botões, efeitos “editoriais”, etc.
+  -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <!--
+    =========================================
+    BODY (conteúdo visível)
+    =========================================
+    Tudo aqui aparece para o usuário e pode ter interação:
+    seções, textos, botões, formulários, carrosséis, modal etc.
+  -->
+
+  <!--
+    =========================================
+    HEADER + NAVBAR (topo fixo)
+    =========================================
+    - <header> é semântico para topo do site.
+    - fixed-top (Bootstrap) mantém o header colado no topo durante o scroll.
+    - arcana-header / arcana-nav são classes de tema (seu CSS).
+    Dica de UX:
+    - Se for “transparente no topo” e virar “glass” ao rolar, isso costuma ser feito no CSS + JS
+      (ex.: adicionar classe quando scrollY > X).
+  -->
+  <header class="arcana-header fixed-top">
+    <!--
+      <nav> é a área semântica de navegação.
+      Classes:
+      - navbar: componente Bootstrap
+      - navbar-expand-lg: expande no desktop; colapsa no mobile
+      - arcana-nav: estética do projeto
+    -->
+    <nav class="navbar navbar-expand-lg arcana-nav">
+      <div class="container">
+        <!--
+          container (Bootstrap)
+          --------------------
+          Centraliza e limita a largura, respeitando breakpoints.
+          Ajuda a manter “layout editorial” e evitar conteúdo esticado demais.
+        -->
+
+        <!--
+          Marca do site (logo textual)
+          ----------------------------
+          navbar-brand: classe Bootstrap para “identidade” da navbar.
+          d-flex align-items-center gap-2:
+          - flexbox para alinhar ícone e texto
+          - centraliza verticalmente
+          - cria espaçamento entre elementos
+          href="#topo": rola até a âncora do topo (id="topo" no <main>).
+          aria-label: descreve a ação para leitores de tela.
+        -->
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#topo" aria-label="Ir para o topo">
+          <!--
+            Marca decorativa:
+            aria-hidden="true" faz o leitor de tela ignorar esse símbolo,
+            porque ele não adiciona informação real (só estética).
+          -->
+          <span class="brand-mark" aria-hidden="true">✦</span>
+
+          <!-- Nome textual da marca (importante para acessibilidade e SEO) -->
+          <span class="brand-name">Livraria Arcana</span>
+        </a>
+
+        <!--
+          Botão do menu mobile (hambúrguer)
+          --------------------------------
+          navbar-toggler: botão padrão Bootstrap para alternar o menu colapsável.
+          data-bs-toggle="collapse" + data-bs-target="#arcanaMenu":
+            liga o botão ao componente Collapse, apontando para o elemento com id="arcanaMenu".
+          aria-controls: qual elemento ele controla
+          aria-expanded: estado (false/true)
+          aria-label: descrição do botão para acessibilidade
+        -->
+        <button class="navbar-toggler arcana-toggler" type="button" data-bs-toggle="collapse"
+          data-bs-target="#arcanaMenu" aria-controls="arcanaMenu" aria-expanded="false" aria-label="Abrir menu">
+          <!--
+            Ícone padrão do toggler:
+            Bootstrap desenha via CSS (navbar-toggler-icon).
+            Dica: se o ícone “sumir” em tema escuro, é geralmente por cor/contraste no CSS.
+          -->
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!--
+          Área colapsável do menu
+          -----------------------
+          Classes:
+          - collapse navbar-collapse: padrão Bootstrap para menu responsivo
+          id="arcanaMenu": precisa bater com data-bs-target do botão acima
+        -->
+        <div class="collapse navbar-collapse" id="arcanaMenu">
+          <!--
+            Lista de links da navbar
+            ------------------------
+            navbar-nav: lista padrão Bootstrap para navegação
+            ms-auto: empurra a lista para a direita (margin-start: auto)
+            align-items-lg-center: alinha itens verticalmente no desktop
+            gap-lg-2: espaçamento entre links no desktop
+          -->
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+            <!--
+              Links âncora
+              ------------
+              Cada href="#..." aponta para um id de seção.
+              Isso cria navegação suave (se você ativar scroll-behavior no CSS).
+            -->
+            <li class="nav-item"><a class="nav-link" href="#catalogo">Catálogo</a></li>
+            <li class="nav-item"><a class="nav-link" href="#vantagens">Vantagens</a></li>
+            <li class="nav-item"><a class="nav-link" href="#digital">Literatura Digital</a></li>
+            <li class="nav-item"><a class="nav-link" href="#entregas">Entregas</a></li>
+            <li class="nav-item"><a class="nav-link" href="#historia">História</a></li>
+            <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+
+            <!--
+              CTA (Call To Action) na navbar
+              ------------------------------
+              ms-lg-3: separa do bloco de links no desktop, criando “respiro editorial”.
+            -->
+            <li class="nav-item ms-lg-3">
+              <!--
+                Botão de destaque:
+                - btn btn-sm: estilo Bootstrap
+                - btn-arcana: classe do seu tema (cor, hover, bordas)
+                - px-3: padding horizontal
+                A âncora leva para newsletter (conversão).
+              -->
+              <a class="btn btn-arcana btn-sm px-3" href="#newsletter">
+                Receber novidades
+              </a>
+            </li>
+          </ul>
+        </div><!-- /collapse -->
+      </div><!-- /container -->
+    </nav><!-- /nav -->
+  </header>
+
+  <!--
+    =========================================
+    MAIN (conteúdo principal)
+    =========================================
+    <main> indica a área principal do conteúdo (semântica importante).
+    id="topo": âncora para “voltar ao topo”.
+    arcana-main: estilos gerais do layout no seu CSS.
+  -->
+  <main id="topo" class="arcana-main">
+
+    <!--
+      =========================================
+      HERO (vitrine editorial)
+      =========================================
+      A primeira impressão:
+      - explica proposta da Arcana
+      - dá CTA (explorar / conhecer)
+      - cria clima visual (card, glow, métricas)
+    -->
+    <section class="hero">
+      <div class="container">
+        <!--
+          Grid do Bootstrap:
+          - row: linha do grid
+          - align-items-center: alinha colunas verticalmente
+          - g-4: espaçamento entre colunas/linhas
+        -->
+        <div class="row align-items-center g-4">
+
+          <!--
+            Coluna esquerda do hero (texto e CTA)
+            - col-lg-6: 50% no desktop (lg+), 100% no mobile
+            - data-aos="fade-up": anima esse bloco ao aparecer
+          -->
+          <div class="col-lg-6" data-aos="fade-up">
+            <!-- Eyebrow: texto curto acima do título (estilo editorial) -->
+            <p class="eyebrow">Curadoria editorial • Fantasia, ficção, pop & poesia</p>
+
+            <!--
+              h1: o título mais importante da página
+              - bom para SEO e acessibilidade
+              - ideal ter apenas um h1 por página (como você fez)
+              hero-accent: destaca um trecho via CSS
+            -->
+            <h1 class="hero-title">
+              Uma livraria onde cada página
+              <span class="hero-accent">acende um feitiço</span>.
+            </h1>
+
+            <!-- Subtítulo: reforça proposta/benefício -->
+            <p class="hero-subtitle">
+              A Livraria Arcana une catálogo enxuto, capa bonita e sinopse que dá vontade.
+              Escolha por gênero, humor ou intenção: “me surpreenda”, “me abrace”, “me vire do avesso”.
+            </p>
+
+            <!--
+              CTA (botões principais)
+              - d-flex: organiza lado a lado
+              - flex-wrap: quebra linha se necessário (mobile)
+              - gap-2: espaçamento entre botões
+              - mt-4: separação visual do texto
+            -->
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <a class="btn btn-arcana px-4" href="#catalogo">Explorar catálogo</a>
+              <a class="btn btn-ghost px-4" href="#historia">Conhecer a Arcana</a>
+            </div>
+
+            <!--
+              Métricas rápidas (credibilidade/ritmo)
+              -------------------------------------
+              Pequenos blocos que funcionam como “microprovas”:
+              - +120 títulos curados
+              - 48h postagem média
+              - Arcana clube do livro
+              Dica: se isso for dinâmico no futuro, você pode preencher via JS.
+            -->
+            <div class="hero-metrics mt-4">
+              <div class="metric">
+                <span class="metric-value">+120</span>
+                <span class="metric-label">títulos curados</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value">48h</span>
+                <span class="metric-label">postagem média</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value">Arcana</span>
+                <span class="metric-label">clube do livro</span>
+              </div>
+            </div>
+          </div><!-- /col -->
+
+          <!--
+            Coluna direita do hero (card visual)
+            - data-aos="fade-left": anima vindo da direita (dependendo da config)
+          -->
+          <div class="col-lg-6" data-aos="fade-left">
+
+            <!--
+              Card do hero
+              ------------
+              “Vitrine editorial” em forma de cartão:
+              - topo: pills/etiquetas
+              - meio: cover (visual)
+              - baixo: texto + mini-CTA
+            -->
+            <div class="hero-card">
+              <div class="hero-card-top">
+                <!--
+                  Pill: etiqueta arredondada
+                  pill-soft: variação com menos contraste (você controla no CSS)
+                -->
+                <span class="pill">Seleção da semana</span>
+                <span class="pill pill-soft">Editorial</span>
+              </div>
+
+              <!--
+                Cover do hero
+                -------------
+                Não é <img>, então você adicionou acessibilidade corretamente:
+                - role="img": informa que isso funciona como imagem
+                - aria-label: descreve o que é
+                Visual real geralmente vem do CSS (background-image / gradient).
+              -->
+              <div class="hero-cover" role="img" aria-label="Vitrine editorial de livros"></div>
+
+              <div class="hero-card-bottom">
+                <h3 class="hero-card-title">“A leitura é um portal com lombada.”</h3>
+                <p class="hero-card-text">
+                  Aqui você encontra histórias para colecionar e reler. Do hype ao clássico, do sussurro ao trovão.
+                </p>
+
+                <!-- Mini CTAs dentro do card -->
+                <div class="d-flex gap-2 flex-wrap">
+                  <a class="btn btn-ghost btn-sm" href="#digital">Ver eBooks</a>
+                  <a class="btn btn-arcana btn-sm" href="#newsletter">Entrar na lista</a>
+                </div>
+              </div>
+            </div><!-- /hero-card -->
+          </div><!-- /col -->
+        </div><!-- /row -->
+      </div><!-- /container -->
+
+      <!--
+        Detalhe decorativo (glow)
+        -------------------------
+        Elemento visual para atmosfera.
+        aria-hidden="true": ignora em leitores de tela (não tem significado semântico).
+      -->
+      <div class="hero-glow" aria-hidden="true"></div>
+    </section>
+
+    <!--
+      =========================================
+      CATÁLOGO
+      =========================================
+      Objetivo:
+      - Filtros por categoria (botões com data-filter)
+      - Busca client-side (input search)
+      - Renderização via JS (slides injetados no Swiper)
+      - Estado vazio (empty state) quando não há resultados
+    -->
+    <section id="catalogo" class="section">
+      <div class="container">
+        <!--
+          Cabeçalho da seção
+          ------------------
+          section-head: geralmente organiza título/subtítulo + controles (busca)
+          data-aos="fade-up": animação ao rolar
+        -->
+        <div class="section-head" data-aos="fade-up">
+          <div>
+            <h2 class="section-title">Catálogo Curado</h2>
+            <p class="section-subtitle">Filtre por gênero e veja detalhes sem sair da página.</p>
+          </div>
+
+          <!--
+            Campo de busca (client-side)
+            ----------------------------
+            - label com visually-hidden: fica invisível, mas acessível (boa prática!)
+            - input type="search": dá dicas semânticas ao navegador (teclado com “buscar” no mobile)
+            - id="searchInput": seu JS usa este id para ler o texto e filtrar os livros
+          -->
+          <div class="search-wrap">
+            <label for="searchInput" class="visually-hidden">Buscar livro</label>
+            <input id="searchInput" class="form-control arcana-input" type="search"
+              placeholder="Buscar por título, autor, tags..." />
+          </div>
+        </div>
+
+        <!--
+          Filtros por categoria
+          ---------------------
+          Cada botão carrega data-filter="categoria".
+          Seu JS deve:
+          1) capturar o clique
+          2) marcar visualmente o ativo (classe is-active)
+          3) filtrar a lista de livros
+          OBS importante:
+          - Você tem um data-filter="Clássico" com maiúscula e outros minúsculos.
+            Se o seu JS comparar strings sem normalizar (ex.: toLowerCase),
+            o filtro pode falhar. O ideal é padronizar:
+            - tudo minúsculo nos data-filter e nas tags dos livros
+            - ou normalizar no JS antes de comparar
+        -->
+        <div class="filters" data-aos="fade-up" data-aos-delay="80">
+          <button class="filter-btn is-active" data-filter="todos" type="button">Todos</button>
+          <button class="filter-btn" data-filter="Clássico" type="button">Clássicos</button>
+          <button class="filter-btn" data-filter="fantasia" type="button">Fantasia</button>
+          <button class="filter-btn" data-filter="romance" type="button">Romance</button>
+          <button class="filter-btn" data-filter="sci-fi" type="button">Sci-fi</button>
+          <button class="filter-btn" data-filter="contos" type="button">Contos</button>
+          <button class="filter-btn" data-filter="epico" type="button">Épico</button>
+          <button class="filter-btn" data-filter="historia" type="button">Historia</button>
+          <button class="filter-btn" data-filter="lgbtqiapn+" type="button">LGBTQIAPN+</button>
+        </div>
+
+        <!--
+          CATÁLOGO EM CARROSSEL (Swiper)
+          -----------------------------
+          Estrutura base do Swiper:
+          - .swiper: container principal
+          - .swiper-wrapper: trilho onde ficam os slides
+          - .swiper-slide: cada “cartão de livro” vira um slide
+
+          Neste projeto, o JS injeta os slides dentro do wrapper (#catalogGrid).
+          Isso é ótimo porque:
+          - seu HTML fica limpo (estrutura)
+          - sua lista de livros vira “fonte de verdade” no JS (dados)
+          - filtros/busca atualizam a renderização sem recarregar a página
+          - Sempre que você “trocar” os slides via JS, talvez precise chamar
+            swiper.update() para o Swiper recalcular tamanhos/quantidade.
+        -->
+        <div class="swiper arcana-catalog-swiper mt-2" data-aos="fade-up" data-aos-delay="140">
+          <div id="catalogGrid" class="swiper-wrapper">
+            <!-- Slides (swiper-slide) entram aqui via JS -->
+          </div>
+
+          <!--
+            Controles do carrossel
+            ----------------------
+            Essas divs viram:
+            - botão anterior (prev)
+            - paginação (bolinhas/fracção)
+            - botão próximo (next)
+
+            O Swiper precisa ser configurado no JS apontando para essas classes:
+            navigation: { nextEl: '.catalog-next', prevEl: '.catalog-prev' }
+            pagination: { el: '.catalog-pagination', clickable: true }
+          -->
+          <div class="catalog-controls">
+            <div class="catalog-prev"></div>
+            <div class="catalog-pagination"></div>
+            <div class="catalog-next"></div>
+          </div>
+        </div>
+
+        <!--
+          Empty State (estado vazio)
+          --------------------------
+          Aparece quando nenhum livro bate com a busca/filtro.
+          - d-none (Bootstrap) esconde por padrão
+          Seu JS deve:
+          - remover d-none quando a lista filtrada ficar vazia
+          - adicionar d-none quando houver resultados
+        -->
+        <div id="emptyState" class="empty-state d-none" data-aos="fade-up">
+          <p class="mb-0">Nenhum livro encontrado com esses filtros. Tenta outro feitiço (ou outra palavra). ✨</p>
+        </div>
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      VANTAGENS
+      =========================================
+      section-muted: variação de fundo (para alternar contraste entre seções).
+      Estrutura:
+      - esquerda: título + texto
+      - direita: grid de cards (benefícios)
+    -->
+    <section id="vantagens" class="section section-muted">
+      <div class="container">
+        <div class="row align-items-end g-4">
+          <!-- Coluna do título/subtítulo -->
+          <div class="col-lg-5" data-aos="fade-up">
+            <h2 class="section-title">Vantagens da Arcana</h2>
+            <p class="section-subtitle">
+              Uma livraria que prefere escolher com cuidado a oferecer sem critério,
+              tratando cada livro como parte de uma narrativa maior.
+            </p>
+          </div>
+
+          <!-- Coluna com cards de features -->
+          <div class="col-lg-7">
+            <div class="row g-3">
+              <!--
+                Cada “feature-card” é um card de benefício.
+                data-aos-delay escalona a animação (efeito em cascata).
+              -->
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="80">
+                <div class="feature-card">
+                  <!-- Ícone decorativo (pode ser um emoji, svg, ou pseudo-elemento no CSS) -->
+                  <div class="feature-icon">✦</div>
+                  <h3 class="feature-title">Curadoria editorial</h3>
+                  <p class="feature-text">Poucos títulos, bem escolhidos. Sem prateleira infinita de “qualquer coisa”.
+                  </p>
+                </div>
+              </div>
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="120">
+                <div class="feature-card">
+                  <div class="feature-icon">⟡</div>
+                  <h3 class="feature-title">Experiência clean</h3>
+                  <p class="feature-text">Design escuro, elegante e rápido. O livro é a estrela, não o barulho.</p>
+                </div>
+              </div>
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="160">
+                <div class="feature-card">
+                  <div class="feature-icon">✧</div>
+                  <h3 class="feature-title">Detalhes de verdade</h3>
+                  <p class="feature-text">Sinopses e tags que ajudam a decidir. Menos “marketing”, mais sentido.</p>
+                </div>
+              </div>
+
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card">
+                  <div class="feature-icon">⌁</div>
+                  <h3 class="feature-title">Clube Arcana</h3>
+                  <p class="feature-text">Indicações mensais e leituras coletivas. Conversa boa, spoiler com cuidado.
+                  </p>
+                </div>
+              </div>
+            </div><!-- /row -->
+          </div><!-- /col -->
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      LITERATURA DIGITAL
+      =========================================
+      Seção em duas colunas:
+      - esquerda: explicação + lista + CTA
+      - direita: card visual de “pacote”
+    -->
+    <section id="digital" class="section">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6" data-aos="fade-up">
+            <h2 class="section-title">Literatura Digital</h2>
+            <p class="section-subtitle">
+              eBooks e leitura sem peso na mochila. Ideal pra viagens, filas e madrugadas de “só mais um capítulo”.
+            </p>
+
+            <!--
+              Lista estilizada
+              ---------------
+              arcana-list: classe do seu CSS para bullets customizados
+              <span class="dot">: provavelmente desenha um marcador visual (bolinha/estrela).
+            -->
+            <ul class="arcana-list">
+              <li><span class="dot"></span>Entrega imediata por e-mail</li>
+              <li><span class="dot"></span>Formatos comuns (ePub/PDF, conforme disponibilidade)</li>
+              <li><span class="dot"></span>Recomendações por gênero e humor</li>
+            </ul>
+
+            <!-- CTA de conversão -->
+            <a class="btn btn-arcana mt-3" href="#newsletter">Quero recomendações digitais</a>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-left">
+            <!--
+              Card visual da área digital
+              ---------------------------
+              digital-card / digital-card-inner controlam:
+              - fundo, bordas, brilho, espaçamento
+              - organização interna (texto + badges)
+            -->
+            <div class="digital-card">
+              <div class="digital-card-inner">
+                <p class="eyebrow mb-2">Pacote Arcana Digital</p>
+                <h3 class="digital-title">Escolha um tema, ganhe um mapa.</h3>
+                <p class="digital-text">
+                  Você diz “quero algo sombrio e inteligente”, e a Arcana responde com uma rota de leitura.
+                </p>
+
+                <!--
+                  Badges (selos)
+                  -------------
+                  Úteis para:
+                  - reforçar categorias
+                  - criar “chips” de interesse
+                -->
+                <div class="digital-badges">
+                  <span class="badge badge-arcana">Fantasia</span>
+                  <span class="badge badge-arcana">Ficção</span>
+                  <span class="badge badge-arcana">Pop</span>
+                  <span class="badge badge-arcana">Romance</span>
+                </div>
+              </div>
+            </div><!-- /digital-card -->
+          </div>
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      ENTREGAS
+      =========================================
+      Cards em 3 colunas no desktop (md=4).
+      section-muted alterna o fundo para ritmo visual.
+    -->
+    <section id="entregas" class="section section-muted">
+      <div class="container">
+        <div class="section-head" data-aos="fade-up">
+          <div>
+            <h2 class="section-title">Entregas & Cuidados</h2>
+            <p class="section-subtitle">Embalagem segura, rastreio e carinho editorial.</p>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <!-- Card 1 -->
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
+            <div class="ship-card">
+              <h3 class="ship-title">Postagem rápida</h3>
+              <p class="ship-text">Preparação em até 48h úteis (média). Você acompanha tudo com rastreio.</p>
+              <span class="ship-note">* prazos variam por região</span>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="120">
+            <div class="ship-card">
+              <h3 class="ship-title">Embalagem reforçada</h3>
+              <p class="ship-text">Cantos protegidos e caixa firme. Livro amassado aqui é crime literário.</p>
+              <span class="ship-note">proteção extra disponível</span>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
+            <div class="ship-card">
+              <h3 class="ship-title">Troca simplificada</h3>
+              <p class="ship-text">Chegou com problema? A gente resolve sem novela. Comunicação clara e rápida.</p>
+              <span class="ship-note">atendimento humano</span>
+            </div>
+          </div>
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      HISTÓRIA + CARROSSEL (Swiper)
+      =========================================
+      Layout em duas colunas:
+      - esquerda: texto (contexto)
+      - direita: Swiper com “capítulos”
+    -->
+    <section id="historia" class="section">
+      <div class="container">
+        <div class="row align-items-start g-4">
+          <div class="col-lg-5" data-aos="fade-up">
+            <h2 class="section-title">História da Arcana</h2>
+            <p class="section-subtitle">
+              A Arcana nasceu do desejo de tratar livros como objetos editoriais: textura, ritmo, silêncio e impacto.
+            </p>
+
+            <!--
+              Parágrafos com estilo padronizado
+              --------------------------------
+              section-paragraph deve controlar:
+              - line-height
+              - cor
+              - espaçamento entre parágrafos
+            -->
+            <p class="section-paragraph">
+              Inspirada em vitrines elegantes e editoras de personalidade, a Arcana mistura o clássico e o
+              contemporâneo:
+              um lugar onde um best-seller conversa com um épico, e ambos saem melhores da conversa.
+            </p>
+
+            <p class="section-paragraph mb-0">
+              O resultado é uma livraria minimalista, mas viva: menos volume, mais intenção.
+            </p>
+          </div>
+
+          <div class="col-lg-7" data-aos="fade-left">
+            <!--
+              Swiper: estrutura base
+              ----------------------
+              - .swiper: container raiz
+              - .swiper-wrapper: trilho
+              - .swiper-slide: slides
+              OBS: depende do JS (new Swiper('.arcana-swiper', {...}))
+            -->
+            <div class="swiper arcana-swiper">
+              <div class="swiper-wrapper">
+
+                <!-- Slide 1 -->
+                <div class="swiper-slide">
+                  <div class="story-card">
+                    <p class="story-kicker">Capítulo I</p>
+                    <h3 class="story-title">Curadoria como linguagem</h3>
+                    <p class="story-text">Escolher também é escrever. Cada título entra por motivo, não por moda.</p>
+                  </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="swiper-slide">
+                  <div class="story-card">
+                    <p class="story-kicker">Capítulo II</p>
+                    <h3 class="story-title">Design que não grita</h3>
+                    <p class="story-text">O fundo escuro não esconde, ele destaca. O branco respira, o dourado guia.</p>
+                  </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="swiper-slide">
+                  <div class="story-card">
+                    <p class="story-kicker">Capítulo III</p>
+                    <h3 class="story-title">Comunidade Arcana</h3>
+                    <p class="story-text">Leitura é melhor quando vira conversa. Clube, indicações e encontros.</p>
+                  </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="swiper-slide">
+                  <div class="story-card">
+                    <p class="story-kicker">Capítulo IV</p>
+                    <h3 class="story-title">O portal fica aberto</h3>
+                    <p class="story-text">A Arcana muda com você. Novas prateleiras, mas sempre com critério.</p>
+                  </div>
+                </div>
+              </div><!-- /swiper-wrapper -->
+
+              <!--
+                Controles do Swiper
+                -------------------
+                Estes elementos são “ganchos” para o Swiper:
+                - .swiper-button-prev / next: navegação
+                - .swiper-pagination: paginação
+                Precisa configurar no JS apontando para esses seletores.
+              -->
+              <div class="swiper-controls">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+              </div>
+            </div><!-- /swiper -->
+          </div>
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      CONTATO
+      =========================================
+      Estrutura:
+      - esquerda: informações (card)
+      - direita: formulário (layout)
+      Observação importante:
+      - onsubmit="return false;" impede envio real.
+        Isso é ok para protótipo, mas no futuro você pode:
+        - integrar com Formspree, Netlify Forms, EmailJS, backend próprio etc.
+    -->
+    <section id="contato" class="section section-muted">
+      <div class="container">
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-5" data-aos="fade-up">
+            <h2 class="section-title">Contato</h2>
+            <p class="section-subtitle">Quer pedir uma indicação personalizada? Manda seu “mood” de leitura.</p>
+
+            <!--
+              Card de contato
+              --------------
+              Reúne infos rápidas.
+              Dica: se isso virar real, vale transformar e-mail e instagram em links clicáveis.
+            -->
+            <div class="contact-card mt-3">
+              <p class="mb-1"><strong>E-mail:</strong> contato@livrariaarcana.com</p>
+              <p class="mb-1"><strong>Instagram:</strong> @livrariaarcana</p>
+              <p class="mb-0"><strong>Atendimento:</strong> seg a sex, 9h–18h</p>
+            </div>
+          </div>
+
+          <div class="col-lg-7" data-aos="fade-left">
+            <!--
+              Formulário (layout)
+              -------------------
+              - arcana-form: estilos autorais
+              - onsubmit="return false;": bloqueia submit de verdade
+              Por enquanto, os botões são “UI” (sem ação).
+              Futuro: adicionar JS para validar e enviar.
+            -->
+            <form class="arcana-form" onsubmit="return false;">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="nome">Nome</label>
+                  <!--
+                    Campo de texto:
+                    - form-control: estilo Bootstrap
+                    - arcana-input: seu tema (bordas/cores/foco)
+                  -->
+                  <input id="nome" class="form-control arcana-input" type="text" placeholder="Seu nome" />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="email">E-mail</label>
+                  <!--
+                    type="email": habilita validação básica do navegador.
+                    Dica: no futuro, você pode usar required e feedback visual.
+                  -->
+                  <input id="email" class="form-control arcana-input" type="email" placeholder="voce@exemplo.com" />
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="mensagem">Mensagem</label>
+                  <!--
+                    textarea:
+                    - rows="4": altura inicial
+                    - ideal para mensagens mais longas
+                  -->
+                  <textarea id="mensagem" class="form-control arcana-input" rows="4"
+                    placeholder="Ex.: quero um livro curto, inteligente e levemente ácido…"></textarea>
+                </div>
+
+                <!--
+                  Botões do formulário
+                  --------------------
+                  type="button" evita disparar submit.
+                  Como o form não envia ainda, está correto.
+                  Futuro:
+                  - trocar “Enviar” para type="submit"
+                  - remover onsubmit="return false;"
+                  - implementar envio real + validação
+                -->
+                <div class="col-12 d-flex gap-2 flex-wrap">
+                  <button class="btn btn-arcana px-4" type="button">Enviar</button>
+                  <button class="btn btn-ghost px-4" type="button">Pedir recomendação</button>
+                </div>
+              </div><!-- /row -->
+            </form>
+          </div>
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      NEWSLETTER
+      =========================================
+      Bloco de captura de e-mail (conversão).
+      Assim como o contato, está “mockado” (não envia de verdade).
+      Futuro: integrar com Mailchimp/Brevo/ConvertKit etc.
+    -->
+    <section id="newsletter" class="section">
+      <div class="container" data-aos="fade-up">
+        <div class="newsletter">
+          <div class="newsletter-left">
+            <h2 class="newsletter-title">Newsletter Arcana</h2>
+            <p class="newsletter-text">
+              Uma carta curta, bonita e útil: lançamentos, curadoria e um “livro secreto” de vez em quando.
+            </p>
+          </div>
+
+          <!--
+            Form da newsletter
+            ------------------
+            - label visually-hidden: acessível
+            - input email: validação básica
+            - botão type="button": por enquanto não envia
+          -->
+          <form class="newsletter-form" onsubmit="return false;">
+            <label class="visually-hidden" for="newsletterEmail">Seu e-mail</label>
+            <input id="newsletterEmail" class="form-control arcana-input" type="email"
+              placeholder="seuemail@exemplo.com" />
+            <button class="btn btn-arcana" type="button">Inscrever</button>
+          </form>
+        </div><!-- /newsletter -->
+      </div><!-- /container -->
+    </section>
+
+    <!--
+      =========================================
+      FOOTER (rodapé)
+      =========================================
+      Área final:
+      - assinatura da marca
+      - links rápidos
+      - “Voltar ao topo”
+    -->
+    <footer class="arcana-footer">
+      <div class="container">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-6">
+            <!--
+              Marca no rodapé
+              --------------
+              Reforça identidade no final da página.
+            -->
+            <p class="mb-0 footer-brand">
+              <span aria-hidden="true">✦</span> Livraria Arcana
+            </p>
+            <small class="footer-note">Curadoria editorial • Magia em papel</small>
+          </div>
+
+          <!--
+            Links rápidos
+            -------------
+            text-md-end: alinha à direita a partir de md.
+            Âncoras internas para navegação rápida.
+          -->
+          <div class="col-md-6 text-md-end">
+            <a class="footer-link" href="#topo">Voltar ao topo</a>
+            <span class="footer-sep">•</span>
+            <a class="footer-link" href="#catalogo">Catálogo</a>
+            <span class="footer-sep">•</span>
+            <a class="footer-link" href="#contato">Contato</a>
+          </div>
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </footer>
+  </main>
+
+  <!--
+    =========================================
+    MODAL (Bootstrap)
+    =========================================
+    Modal é uma “janela” sobreposta, ótima para detalhes do livro sem sair da página.
+    Estrutura Bootstrap:
+    - .modal.fade: container do modal com animação
+    - .modal-dialog: caixa do modal
+    - .modal-content: conteúdo interno
+
+    Você preparou IDs para o JS preencher dinamicamente:
+    - bookModalTitle, bookModalCover, bookModalMeta, bookModalPrice, bookModalDesc, bookModalTags, bookModalBuy
+  -->
+  <div class="modal fade" id="bookModal" tabindex="-1" aria-hidden="true">
+    <!--
+      modal-dialog:
+      - modal-dialog-centered: centraliza verticalmente
+      - modal-lg: aumenta a largura do modal
+    -->
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <!-- modal-content é o “corpo” do modal; arcana-modal aplica o tema escuro/editorial -->
+      <div class="modal-content arcana-modal">
+        <div class="modal-header border-0">
+          <!--
+            Título do modal
+            --------------
+            id="bookModalTitle": o JS pode trocar para o título do livro selecionado.
+          -->
+          <h5 class="modal-title modal-title-arcana" id="bookModalTitle">Detalhes do Livro</h5>
+
+          <!--
+            Botão fechar (Bootstrap)
+            -----------------------
+            data-bs-dismiss="modal": fecha automaticamente sem precisar de JS extra.
+            btn-close-white: variante visível em fundo escuro.
+          -->
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row g-3 align-items-start">
+            <div class="col-md-4">
+              <!--
+                Capa do livro dentro do modal
+                -----------------------------
+                Não é <img>, então:
+                - role="img": indica imagem semântica
+                - aria-label: descreve
+                id="bookModalCover": JS pode aplicar background-image com a URL da capa
+              -->
+              <div id="bookModalCover" class="modal-cover" role="img" aria-label="Capa do livro"></div>
+            </div>
+
+            <div class="col-md-8">
+              <!--
+                Metadados (autor/ano/gênero)
+                ----------------------------
+                id="bookModalMeta": preenchido via JS conforme o livro clicado.
+              -->
+              <p class="modal-meta mb-1" id="bookModalMeta">Autor • Ano • Gênero</p>
+
+              <!--
+                Preço
+                -----
+                id="bookModalPrice": preenchido via JS.
+              -->
+              <p class="modal-price mb-3" id="bookModalPrice">R$ 0,00</p>
+
+              <h6 class="modal-section-title">Sinopse</h6>
+              <!-- Sinopse preenchida via JS -->
+              <p class="modal-text" id="bookModalDesc"></p>
+
+              <h6 class="modal-section-title mt-3">Tags</h6>
+              <!--
+                Tags/chips
+                ---------
+                id="bookModalTags": o JS deve gerar badges (ex.: <span class="tag">...</span>)
+              -->
+              <div id="bookModalTags" class="modal-tags"></div>
+
+              <div class="d-flex gap-2 flex-wrap mt-4">
+                <!--
+                  Link de compra/detalhes
+                  -----------------------
+                  id="bookModalBuy": o JS atualiza o href para o link correto do livro.
+                  target="_blank": abre em nova aba
+                  rel="noopener": evita que a nova aba tenha acesso ao window.opener (segurança/performance)
+                -->
+                <a id="bookModalBuy" class="btn btn-arcana" href="#" target="_blank" rel="noopener">
+                  Comprar / Ver detalhes
+                </a>
+
+                <!--
+                  Botão para fechar o modal sem JS extra
+                  data-bs-dismiss="modal": Bootstrap cuida do fechamento
+                -->
+                <button class="btn btn-ghost" type="button" data-bs-dismiss="modal">
+                  Continuar explorando
+                </button>
+              </div>
+
+              <small class="d-block mt-3 modal-footnote">
+                * Links de compra são exemplos. Integre com sua loja/checkout quando quiser.
+              </small>
+            </div>
+          </div><!-- /row -->
+        </div><!-- /modal-body -->
+      </div><!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+  </div><!-- /modal -->
+
+  <!--
+    =========================================
+    SCRIPTS (JavaScript)
+    =========================================
+    Ordem importa porque algumas bibliotecas dependem de outras ou precisam existir
+    antes do seu script final rodar.
+
+    Ordem escolhida:
+    1) Bootstrap bundle: necessário para navbar collapse e modal funcionarem
+       (bundle já inclui Popper, usado em alguns componentes)
+    2) AOS: biblioteca de animação
+    3) Swiper: biblioteca do carrossel
+    4) script.js: seu código (inicializa AOS/Swiper e monta catálogo/modal)
+  -->
+
+  <!-- Bootstrap JS (bundle com Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AOS JS (depois você chama AOS.init() no seu script.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <!-- Swiper JS (depois você cria new Swiper(...) no seu script.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Seu JS (lógica do catálogo, filtros, busca, modal, inicializações) -->
+  <script src="/js/script.js"></script>
+</body>
+
+</html>
